@@ -35,4 +35,19 @@ public class BinaryAndCharacterStream {
         }
     }
 
+    public static int[] readArrayFromCharacterFile(String fileName) throws IOException {
+        try (BufferedReader reader = new BufferedReader(new FileReader(fileName))) {
+            String line = reader.readLine();
+            if (line != null && !line.isEmpty()) {
+                String[] numberStrings = line.split(" ");
+                int[] array = new int[numberStrings.length];
+                for (int i = 0; i < numberStrings.length; i++) {
+                    array[i] = Integer.parseInt(numberStrings[i]);
+                }
+                return array;
+            }
+            return new int[0];
+        }
+    }
+
 }
