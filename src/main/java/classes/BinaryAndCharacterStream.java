@@ -1,6 +1,8 @@
 package classes;
 
 import java.io.*;
+import java.nio.file.Files;
+import java.nio.file.Paths;
 
 public class BinaryAndCharacterStream {
 
@@ -24,30 +26,32 @@ public class BinaryAndCharacterStream {
         }
     }
 
-    public static void writeArrayToCharacterFile(int[] array, String fileName) throws IOException {
-        try (BufferedWriter writer = new BufferedWriter(new FileWriter(fileName))) {
-            for (int i = 0; i < array.length; i++) {
-                writer.write(String.valueOf(array[i]));
-                if (i < array.length - 1) {
-                    writer.write(" ");
-                }
+    public static void writeArrayToCharacterFile(int[] items){
+        try(FileWriter dos = new FileWriter("file3.txt")) {
+            for(Integer item : items){
+                dos.write(String.valueOf(item));
+                dos.write(' ');
+
             }
+        } catch (IOException ex) {
+            throw new RuntimeException(ex);
         }
+
     }
 
-    public static int[] readArrayFromCharacterFile(String fileName) throws IOException {
-        try (BufferedReader reader = new BufferedReader(new FileReader(fileName))) {
-            String line = reader.readLine();
-            if (line != null && !line.isEmpty()) {
-                String[] numberStrings = line.split(" ");
-                int[] array = new int[numberStrings.length];
-                for (int i = 0; i < numberStrings.length; i++) {
-                    array[i] = Integer.parseInt(numberStrings[i]);
-                }
-                return array;
+    public static int[] readArrayFromCharacterFile(int n) {
+        int[] result = new int[n];
+        String[] numbers;
+        try (BufferedReader dos = new BufferedReader(Files.newBufferedReader(Paths.get("file3.txt")))) {
+            numbers = dos.readLine().split(" ");
+            for (int i = 0; i< numbers.length; i++){
+                result[i] = Integer.parseInt(numbers[i]);
             }
-            return new int[0];
+
+        } catch (IOException e) {
+            throw new RuntimeException(e);
         }
+        return result;
     }
 
 }

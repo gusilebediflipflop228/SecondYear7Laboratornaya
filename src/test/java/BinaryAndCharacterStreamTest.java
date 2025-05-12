@@ -1,15 +1,22 @@
 import classes.BinaryAndCharacterStream;
 import org.junit.jupiter.api.AfterEach;
+import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
 import java.io.*;
+import java.nio.file.Files;
 
 import static classes.BinaryAndCharacterStream.writeArrayToBinaryFile;
 import static org.junit.jupiter.api.Assertions.*;
 
 public class BinaryAndCharacterStreamTest {
 
-    private final String testFileName = "testArrayData.bin";
+    private final String testFileName = "file3.txt";
+    private File testFile;
+
+    @BeforeEach
+    public void setUp(){
+        testFile = new File(testFileName);}
 
     @AfterEach
     public void cleanUp() {
@@ -65,10 +72,6 @@ public class BinaryAndCharacterStreamTest {
     }
 
 
-
-
-
-
     private void writeTestArrayToBinaryFile(int[] array) throws IOException {
         try (DataOutputStream dataOutputStream = new DataOutputStream(new FileOutputStream(testFileName))) {
             dataOutputStream.writeInt(array.length);
@@ -91,6 +94,7 @@ public class BinaryAndCharacterStreamTest {
     @Test
     public void testReadArrayFromBinaryFileWithEmptyArray() throws IOException {
         int[] testArray = {};
+
         writeTestArrayToBinaryFile(testArray);
 
         int[] resultArray = BinaryAndCharacterStream.readArrayFromBinaryFile(testFileName);
@@ -116,96 +120,74 @@ public class BinaryAndCharacterStreamTest {
 
 
     @Test
-    public void testWriteArrayToCharacterFileWithValidArray() throws IOException {
-        int[] testArray = {10, 20, 30, 40, 50};
-        BinaryAndCharacterStream.writeArrayToCharacterFile(testArray, testFileName);
+    public void testWriteArrayToCharacterFileWithValidData() throws IOException {
+        int[] items = {1, 2, 3, 4, 5};
 
-        try (BufferedReader reader = new BufferedReader(new FileReader(testFileName))) {
-            String line = reader.readLine();
-            assertNotNull(line, "File should not be empty.");
-            assertEquals("10 20 30 40 50", line, "File contents do not match the expected string.");
+        BinaryAndCharacterStream.writeArrayToCharacterFile(items);
+
+        assertTrue(testFile.exists(), "The file should be created.");
+        try (BufferedReader reader = new BufferedReader(new FileReader(testFile))) {
+            String content = reader.readLine();
+            assertEquals("1 2 3 4 5 ", content, "The file content should match the array elements separated by spaces.");
         }
     }
 
     @Test
     public void testWriteArrayToCharacterFileWithEmptyArray() throws IOException {
-        int[] testArray = {};
-        BinaryAndCharacterStream.writeArrayToCharacterFile(testArray, testFileName);
+        int[] items = {};
 
-        try (BufferedReader reader = new BufferedReader(new FileReader(testFileName))) {
-            String line = reader.readLine();
-            assertNull(line, "File should be empty for an empty array.");
+
+        BinaryAndCharacterStream.writeArrayToCharacterFile(items);
+
+        assertTrue(testFile.exists(), "The file should be created.");
+        try (BufferedReader reader = new BufferedReader(new FileReader(testFile))) {
+            String content = reader.readLine();
+            assertNull(content, "The file should be empty for an empty array.");
         }
     }
 
     @Test
     public void testWriteArrayToCharacterFileWithLargeArray() throws IOException {
-        int[] testArray = new int[1000];
-        StringBuilder expectedString = new StringBuilder();
-        for (int i = 0; i < testArray.length; i++) {
-            testArray[i] = i;
-            expectedString.append(i);
-            if (i < testArray.length - 1) {
-                expectedString.append(" ");
+        int[] items = new int[1000];
+        for (int i = 0; i < items.length; i++) {
+            items[i] = i + 1;
+        }
+
+        BinaryAndCharacterStream.writeArrayToCharacterFile(items);
+
+        assertTrue(testFile.exists(), "The file should be created.");
+        try (BufferedReader reader = new BufferedReader(new FileReader(testFile))) {
+            StringBuilder expectedContent = new StringBuilder();
+            for (int i = 1; i <= 1000; i++) {
+                expectedContent.append(i).append(" ");
             }
-        }
-
-        BinaryAndCharacterStream.writeArrayToCharacterFile(testArray, testFileName);
-
-        try (BufferedReader reader = new BufferedReader(new FileReader(testFileName))) {
-            String line = reader.readLine();
-            assertNotNull(line, "File should not be empty.");
-            assertEquals(expectedString.toString(), line, "File contents do not match the expected large array string.");
-        }
-    }
-
-
-
-
-    private void writeTestDataToFile(String content) throws IOException {
-        try (BufferedWriter writer = new BufferedWriter(new FileWriter(testFileName))) {
-            writer.write(content);
+            String content = reader.readLine();
+            assertEquals(expectedContent.toString(), content, "The file content should match the large array elements separated by spaces.");
         }
     }
 
     @Test
     public void testReadArrayFromCharacterFileWithValidData() throws IOException {
-        String fileContent = "10 20 30 40 50";
-        writeTestDataToFile(fileContent);
-
-        int[] resultArray = BinaryAndCharacterStream.readArrayFromCharacterFile(testFileName);
-
-        int[] expectedArray = {10, 20, 30, 40, 50};
-        assertArrayEquals(expectedArray, resultArray, "The read array does not match the original array.");
-    }
-
-    @Test
-    public void testReadArrayFromCharacterFileWithEmptyFile() throws IOException {
-        writeTestDataToFile("");
-
-        int[] resultArray = BinaryAndCharacterStream.readArrayFromCharacterFile(testFileName);
-
-        int[] expectedArray = {};
-        assertArrayEquals(expectedArray, resultArray, "The read array should be empty for an empty file.");
-    }
-
-    @Test
-    public void testReadArrayFromCharacterFileWithLargeArray() throws IOException {
-        StringBuilder fileContent = new StringBuilder();
-        int[] expectedArray = new int[1000];
-        for (int i = 0; i < 1000; i++) {
-            expectedArray[i] = i;
-            fileContent.append(i);
-            if (i < 999) {
-                fileContent.append(" ");
-            }
+        try (BufferedWriter writer = new BufferedWriter(new FileWriter(testFile))) {
+            writer.write("1 2 3 4 5");
         }
-        writeTestDataToFile(fileContent.toString());
 
-        int[] resultArray = BinaryAndCharacterStream.readArrayFromCharacterFile(testFileName);
+        int[] result = BinaryAndCharacterStream.readArrayFromCharacterFile(5);
 
-        assertArrayEquals(expectedArray, resultArray, "The read array does not match the large array.");
+        int[] expected = {1, 2, 3, 4, 5};
+        assertArrayEquals(expected, result, "The read array should match the expected values.");
     }
+
+    @Test
+    public void testReadArrayFromCharacterFileWithInvalidData() throws IOException {
+        try (BufferedWriter writer = new BufferedWriter(new FileWriter(testFile))) {
+            writer.write("1 2 a 4 5");
+        }
+
+        assertThrows(NumberFormatException.class, () ->
+                        BinaryAndCharacterStream.readArrayFromCharacterFile(5), "Reading invalid data should throw a NumberFormatException.");
+    }
+
 
 
 

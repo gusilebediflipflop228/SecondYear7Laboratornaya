@@ -11,9 +11,9 @@ import java.util.stream.Stream;
 public class FileExample {
 
     public static List<Path> findFilesByExtension(String directory, String extension){
-        try(Stream<Path> path = Files.walk(Paths.get(directory))) { //рекурсивно обходим файлы дирректории
+        try(Stream<Path> path = Files.walk(Paths.get(directory))) {
             return path
-                    .filter(Files::isRegularFile) //проверям что пришли к обычному файлу а не к дирректории
+                    .filter(Files::isRegularFile)
                     .filter(file -> file.toString().endsWith("." + extension))//
                     .collect(Collectors.toList());
         } catch (IOException e){
