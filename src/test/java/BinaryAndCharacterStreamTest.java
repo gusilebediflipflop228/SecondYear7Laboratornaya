@@ -16,15 +16,16 @@ public class BinaryAndCharacterStreamTest {
 
     @BeforeEach
     public void setUp(){
-        testFile = new File(testFileName);}
-
-    @AfterEach
-    public void cleanUp() {
-        File file = new File(testFileName);
-        if (file.exists()) {
-            file.delete();
-        }
+        testFile = new File(testFileName);
     }
+
+//    @AfterEach
+//    public void cleanUp() {
+//        File file = new File(testFileName);
+//        if (file.exists()) {
+//            file.delete();
+//        }
+//    }
 
     @Test
     public void testWriteArrayToBinaryFileWithValidArray() throws IOException {
@@ -121,14 +122,14 @@ public class BinaryAndCharacterStreamTest {
 
     @Test
     public void testWriteArrayToCharacterFileWithValidData() throws IOException {
-        int[] items = {1, 2, 3, 4, 5};
+        int[] items = {1, 2, 342232332, 4, 5};
 
         BinaryAndCharacterStream.writeArrayToCharacterFile(items);
 
         assertTrue(testFile.exists(), "The file should be created.");
         try (BufferedReader reader = new BufferedReader(new FileReader(testFile))) {
             String content = reader.readLine();
-            assertEquals("1 2 3 4 5 ", content, "The file content should match the array elements separated by spaces.");
+            assertEquals("1 2 342232332 4 5 ", content, "The file content should match the array elements separated by spaces.");
         }
     }
 

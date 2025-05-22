@@ -26,22 +26,14 @@ public class RandomAccessFileExampleTest {
         }
     }
 
-    @AfterEach
-    public void cleanUp() {
-        File file = new File(testFileName);
-        if (file.exists()) {
-            file.delete();
-        }
-    }
-
 
     @Test
     public void testReadIntegersFromValidPosition() throws IOException {
-        int startPosition = 2;
-        int count = 3;
+        int startPosition = 1;
+        int count = 4;
 
         int[] result = RandomAccessFileExample.readIntegersFromPosition(testFileName, startPosition, count);
-        int[] expected = {30, 40, 50};
+        int[] expected = {20, 30, 40, 50};
 
         assertArrayEquals(expected, result, "The integers read from the file do not match the expected values.");
     }

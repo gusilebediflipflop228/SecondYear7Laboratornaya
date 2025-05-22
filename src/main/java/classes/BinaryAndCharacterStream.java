@@ -15,6 +15,7 @@ public class BinaryAndCharacterStream {
         }
     }
 
+
     public static int[] readArrayFromBinaryFile(String fileName) throws IOException {
         try (DataInputStream dataInputStream = new DataInputStream(new FileInputStream(fileName))) {
             int length = dataInputStream.readInt();
@@ -36,7 +37,6 @@ public class BinaryAndCharacterStream {
         } catch (IOException ex) {
             throw new RuntimeException(ex);
         }
-
     }
 
     public static int[] readArrayFromCharacterFile(int n) {

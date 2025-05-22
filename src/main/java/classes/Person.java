@@ -9,13 +9,16 @@ public class Person implements Serializable {
     private String lastname;
     private String firstname;
     private String surname;
-    private LocalDate birthday;
+    private String birthday;
+    public Person() {
+        // Конструктор по умолчанию
+    }
 
-    public Person(String lastname, String firstname, String surname, LocalDate birthday) {
+    public Person(String lastname, String firstname, String surname, String birthday) {
         this.lastname = lastname;
         this.firstname = firstname;
         this.surname = surname;
-        this.birthday = birthday;
+        this.birthday = String.valueOf(birthday);
     }
 
     public String getLastname() {
@@ -30,7 +33,7 @@ public class Person implements Serializable {
         return surname;
     }
 
-    public LocalDate getBirthday() {
+    public String getBirthday() {
         return birthday;
     }
 
@@ -47,7 +50,7 @@ public class Person implements Serializable {
     }
 
     public void setBirthday(String birthday) {
-        this.birthday = LocalDate.parse(birthday);
+        this.birthday = String.valueOf(LocalDate.parse(birthday));
     }
 
     @Override

@@ -10,6 +10,9 @@ public class Flat implements Serializable {
     private double square;
     private List<Person> owners;
 
+    public Flat() {
+        // Конструктор по умолчанию
+    }
     public Flat(int number, double square, List<Person> owners) {
         this.number = number;
         this.square = square;

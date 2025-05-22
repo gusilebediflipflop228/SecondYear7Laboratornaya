@@ -31,9 +31,9 @@ public class HouseServiceTest {
 
     @Test
     public void testSerializeHouseWithValidHouse() throws IOException {
-        Person headOfHouse = new Person("John", "Doe", "Middle", LocalDate.of(1980, 5, 20));
-        Person owner1 = new Person("Alice", "Smith", "Maria", LocalDate.of(1995, 8, 15));
-        Person owner2 = new Person("Bob", "Brown", "James", LocalDate.of(1990, 12, 10));
+        Person headOfHouse = new Person("John", "Doe", "Middle", "1980, 5, 20");
+        Person owner1 = new Person("Alice", "Smith", "Maria", "1995, 8, 15");
+        Person owner2 = new Person("Bob", "Brown", "James", "1990, 12, 10");
 
         Flat flat1 = new Flat(1, 50.5, List.of(owner1));
         Flat flat2 = new Flat(2, 70.0, List.of(owner2));
@@ -46,7 +46,7 @@ public class HouseServiceTest {
 
     @Test
     public void testSerializeHouseWithEmptyHouse() throws IOException {
-        Person headOfHouse = new Person("John", "Doe", "Middle", LocalDate.of(1980, 5, 20));
+        Person headOfHouse = new Person("John", "Doe", "Middle", "1980, 5, 20");
         House house = new House("654321", "456 Another St", headOfHouse, List.of());
 
         try (FileOutputStream fos = new FileOutputStream(temporaryFile)) {
@@ -58,7 +58,7 @@ public class HouseServiceTest {
 
     @Test
     public void testSerializeHouseWithNullStream() {
-        Person headOfHouse = new Person("John", "Doe", "Middle", LocalDate.of(1980, 5, 20));
+        Person headOfHouse = new Person("John", "Doe", "Middle", "1980, 5, 20");
         House house = new House("789012", "789 Empty St", headOfHouse, List.of());
 
         assertThrows(NullPointerException.class, () ->

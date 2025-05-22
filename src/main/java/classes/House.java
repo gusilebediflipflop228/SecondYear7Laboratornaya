@@ -11,6 +11,10 @@ public class House implements Serializable{
     private Person headOfHouse;
     private List<Flat> flats;
 
+    public House() {
+        // Конструктор по умолчанию
+    }
+
     public House(String houseNumber, String address, Person headOfHouse, List<Flat> flats) {
         this.houseNumber = houseNumber;
         this.address = address;

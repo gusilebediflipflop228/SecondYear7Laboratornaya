@@ -10,9 +10,9 @@ public class HouseService {
         }
     }
 
-    public static House deserializeHouse(InputStream inputStream) throws IOException, ClassNotFoundException {
+    public static void deserializeHouse(InputStream inputStream) throws IOException, ClassNotFoundException {
         try (ObjectInputStream ois = new ObjectInputStream(inputStream)) {
-            return (House) ois.readObject();
+            ois.readObject();
         }
     }
 
